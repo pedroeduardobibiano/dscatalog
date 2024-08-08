@@ -40,8 +40,15 @@ public class CategoryResource {
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<CategoryRecord> update(@PathVariable Long id, @RequestBody CategoryDTO dto) {
-        CategoryRecord insert = categoryService.update(id, dto);
-        return new ResponseEntity<>(insert, HttpStatus.OK);
+        dto.setId(id);
+        CategoryRecord update = categoryService.update(dto);
+        return new ResponseEntity<>(update, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        categoryService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }

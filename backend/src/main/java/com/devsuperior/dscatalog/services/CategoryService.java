@@ -5,8 +5,11 @@ import com.devsuperior.dscatalog.dto.CategoryRecord;
 import com.devsuperior.dscatalog.entites.Category;
 import com.devsuperior.dscatalog.factory.CategoryFactory;
 import com.devsuperior.dscatalog.repositories.CategoryRepository;
+import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityExistsException;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,8 +36,8 @@ public class CategoryService {
 
     @Transactional(readOnly = true)
     public CategoryDTO findById(Long id) {
-        Category entity = getById(id);
-        return new CategoryDTO(entity);
+        Category entityId = getById(id);
+        return new CategoryDTO(entityId);
     }
 
     @Transactional
@@ -43,19 +46,30 @@ public class CategoryService {
                 .ifPresent(x -> {
                     throw new EntityExistsException("Category already exists");
                 });
-        Category entity = categoryFactory.createCategory(categoryDTO);
-        entity = categoryRepository.save(entity);
-        return new CategoryRecord(entity.getId(), entity.getName());
-
+        Category cat = categoryFactory.createCategory(categoryDTO);
+        cat = categoryRepository.save(cat);
+        return new CategoryRecord(cat.getId(), cat.getName());
     }
 
     @Transactional
-    public CategoryRecord update(Long id, CategoryDTO categoryDTO) {
-        Category category = getById(id);
+    public CategoryRecord update(CategoryDTO categoryDTO) {
+        Category category = getById(categoryDTO.getId());
         category.setName(categoryDTO.getName());
 
         category = categoryRepository.save(category);
-        return categoryFactory.create(category.getId(), category.getName());
+        return new CategoryRecord(category.getId(), category.getName());
+    }
+
+
+    public void delete(Long id) {
+        try {
+            categoryRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ResourceNotFoundException("id not found");
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Integrity violation");
+        }
     }
 
     private Category getById(Long id) {

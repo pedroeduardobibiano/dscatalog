@@ -64,11 +64,10 @@ public class CategoryService {
 
     public void delete(Long id) {
         try {
-            if (categoryRepository.existsById(id)) {
-                categoryRepository.deleteById(id);
-            } else {
+            if (!categoryRepository.existsById(id)) {
                 throw new ResourceNotFoundException("id not found");
             }
+            categoryRepository.deleteById(id);
 
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Integrity violation");

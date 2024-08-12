@@ -49,5 +49,10 @@ public class ProductResource {
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }
 
-
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        productService.delete(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
+

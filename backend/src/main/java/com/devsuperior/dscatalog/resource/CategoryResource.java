@@ -5,7 +5,9 @@ import com.devsuperior.dscatalog.dto.CategoryRecord;
 import com.devsuperior.dscatalog.services.CategoryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +24,10 @@ public class CategoryResource {
 
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<Page<CategoryDTO>> findAll(
-            @RequestParam(value = "page", defaultValue = "0") Integer page,
-            @RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
-            @RequestParam(value = "direction", defaultValue = "DESC") String direction,
-            @RequestParam(value = "orderBy", defaultValue = "id") String orderBy
+            @PageableDefault(page = 0, size = 3, sort = "name", direction = Sort.Direction.DESC)
+            Pageable pageable
     ) {
-        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
-        Page<CategoryDTO> list = categoryService.findAllPaged(pageRequest);
+        Page<CategoryDTO> list = categoryService.findAllPaged(pageable);
         return ResponseEntity.ok().body(list);
     }
 

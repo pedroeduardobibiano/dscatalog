@@ -9,12 +9,13 @@ import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityExistsException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,8 +30,8 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public Page<CategoryDTO> findAllPaged(PageRequest pageRequest) {
-        Page<Category> list = categoryRepository.findAll(pageRequest);
+    public Page<CategoryDTO> findAllPaged(Pageable pageable) {
+        Page<Category> list = categoryRepository.findAll(pageable);
         return list.map(CategoryDTO::new);
 
     }
@@ -77,6 +78,15 @@ public class CategoryService {
     private Category getById(Long id) {
         Optional<Category> optionalCategory = categoryRepository.findById(id);
         return optionalCategory.orElseThrow(() -> new ResourceNotFoundException("id not found: " + id));
+    }
+
+    public List<Category> getAllCategories(List<CategoryDTO> categoryDTOList) {
+        List<Category> list = new ArrayList<>();
+        for (CategoryDTO catDto : categoryDTOList) {
+            Category category = categoryRepository.getReferenceById(catDto.getId());
+            list.add(category);
+        }
+        return list;
     }
 
 }

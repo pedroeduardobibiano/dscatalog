@@ -1,33 +1,34 @@
 package com.devsuperior.dscatalog.services;
 
-import com.devsuperior.dscatalog.dto.CategoryDTO;
 import com.devsuperior.dscatalog.dto.ProductDTO;
 import com.devsuperior.dscatalog.entites.Category;
 import com.devsuperior.dscatalog.entites.Product;
-import com.devsuperior.dscatalog.repositories.CategoryRepository;
 import com.devsuperior.dscatalog.repositories.ProductRepository;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository) {
+    public ProductService(ProductRepository productRepository, CategoryService categoryService) {
         this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
+        this.categoryService = categoryService;
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findAllPaged(PageRequest pageRequest) {
-        Page<Product> list = productRepository.findAll(pageRequest);
+    public Page<ProductDTO> findAllPaged(Pageable pageable) {
+        Page<Product> list = productRepository.findAll(pageable);
         return list.map(ProductDTO::new);
 
     }
@@ -66,17 +67,11 @@ public class ProductService {
     }
 
     private void updateData(Product product, ProductDTO obj) {
-        product.setName(obj.getName());
-        product.setDescription(obj.getDescription());
-        product.setPrice(obj.getPrice());
-        product.setImgUrl(obj.getImgUrl());
-        product.setDate(obj.getDate());
-
+        BeanUtils.copyProperties(obj, product, "id");
         product.getCategories().clear();
-        for (CategoryDTO catDto : obj.getCategories()) {
-            Category category = categoryRepository.getReferenceById(catDto.getId());
-            product.getCategories().add(category);
-        }
+
+        List<Category> categories = categoryService.getAllCategories(obj.getCategories());
+        product.getCategories().addAll(categories);
     }
 
 }

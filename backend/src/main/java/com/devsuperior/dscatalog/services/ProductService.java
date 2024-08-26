@@ -7,7 +7,6 @@ import com.devsuperior.dscatalog.repositories.ProductRepository;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,13 +29,12 @@ public class ProductService {
     public Page<ProductDTO> findAllPaged(Pageable pageable) {
         Page<Product> list = productRepository.findAll(pageable);
         return list.map(ProductDTO::new);
-
     }
 
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
         Product entity = getById(id);
-        return new ProductDTO(entity, entity.getCategories());
+        return new ProductDTO(entity);
     }
 
     @Transactional
@@ -46,6 +44,7 @@ public class ProductService {
         productRepository.save(entity);
         return new ProductDTO(entity);
     }
+
 
     @Transactional
     public ProductDTO update(Long id, ProductDTO productDTO) {

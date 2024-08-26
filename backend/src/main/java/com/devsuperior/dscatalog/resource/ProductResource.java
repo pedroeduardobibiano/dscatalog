@@ -1,6 +1,7 @@
 package com.devsuperior.dscatalog.resource;
 
 import com.devsuperior.dscatalog.dto.ProductDTO;
+import com.devsuperior.dscatalog.entites.Product;
 import com.devsuperior.dscatalog.services.ProductService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,8 +38,17 @@ public class ProductResource {
 
     @PostMapping
     public ResponseEntity<ProductDTO> insert(@RequestBody ProductDTO dto) {
-        ProductDTO productDto = productService.insert(dto);
-        return new ResponseEntity<>(productDto, HttpStatus.CREATED);
+        ProductDTO product = productService.insert(dto);
+        return new ResponseEntity<>(product, HttpStatus.CREATED);
+    }
+
+    private ProductDTO fromDTO(Product pd) {
+        ProductDTO dto = new ProductDTO();
+        dto.setId(pd.getId());
+        dto.setName(pd.getName());
+        dto.setDescription(pd.getDescription());
+        dto.setPrice(pd.getPrice());
+        return dto;
     }
 
     @PutMapping(value = "/{id}")

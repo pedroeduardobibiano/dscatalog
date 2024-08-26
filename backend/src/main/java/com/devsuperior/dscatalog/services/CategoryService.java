@@ -44,13 +44,17 @@ public class CategoryService {
 
     @Transactional
     public CategoryRecord insert(final CategoryDTO categoryDTO) {
+        testIfExistCategoryNameEqual(categoryDTO);
+        Category cat = categoryFactory.createCategory(categoryDTO);
+        cat = categoryRepository.save(cat);
+        return new CategoryRecord(cat.getId(), cat.getName());
+    }
+
+    public void testIfExistCategoryNameEqual(CategoryDTO categoryDTO) {
         categoryRepository.findByName(categoryDTO.getName())
                 .ifPresent(x -> {
                     throw new EntityExistsException("Category already exists");
                 });
-        Category cat = categoryFactory.createCategory(categoryDTO);
-        cat = categoryRepository.save(cat);
-        return new CategoryRecord(cat.getId(), cat.getName());
     }
 
     @Transactional

@@ -78,6 +78,29 @@ public class CategoryServiceTests {
 
         Mockito.verify(categoryRepository, Mockito.times(1)).findAll(pageable);
 
+    }
+
+    @Test
+    public void findByIdShouldReturnCategory() {
+
+        Mockito.when(categoryRepository.findById(existId)).thenReturn(Optional.of(saveCategory));
+
+        Assertions.assertDoesNotThrow(() -> categoryService.findById(existId));
+
+        Mockito.verify(categoryRepository, Mockito.times(1)).findById(existId);
+
+    }
+
+    @Test
+    public void findByIdShouldThrowResourceNotFoundWhenIdIsNotFound() {
+
+        Mockito.when(categoryRepository.findById(noExistId)).thenReturn(Optional.empty());
+
+        Assertions.assertThrows((ResourceNotFoundException.class), () -> {
+            categoryService.findById(noExistId);
+        });
+
+        Mockito.verify(categoryRepository, Mockito.times(1)).findById(noExistId);
 
     }
 

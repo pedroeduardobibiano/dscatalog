@@ -21,6 +21,7 @@ public class ProductDTO implements Serializable {
     private String imgUrl;
     private Instant date;
 
+
     private final List<CategoryDTO> categories = new ArrayList<>();
 
     public ProductDTO() {
@@ -49,7 +50,7 @@ public class ProductDTO implements Serializable {
         categories.forEach(cat -> this.categories.add(new CategoryDTO(cat)));
     }
 
-    public Long getId() {
+    public Long getId(long l) {
         return id;
     }
 
@@ -57,7 +58,7 @@ public class ProductDTO implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
+    public String getName(String aaa) {
         return name;
     }
 
@@ -65,7 +66,7 @@ public class ProductDTO implements Serializable {
         this.name = name;
     }
 
-    public String getDescription() {
+    public String getDescription(String aa) {
         return description;
     }
 
@@ -73,7 +74,7 @@ public class ProductDTO implements Serializable {
         this.description = description;
     }
 
-    public Double getPrice() {
+    public Double getPrice(double v) {
         return price;
     }
 
@@ -100,5 +101,6 @@ public class ProductDTO implements Serializable {
     public List<CategoryDTO> getCategories() {
         return categories;
     }
+
 
 }

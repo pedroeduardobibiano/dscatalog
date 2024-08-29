@@ -38,6 +38,7 @@ public class ProductRepositoryTests {
 
         Optional<Product> result = productRepository.findById(existingId);
         Assertions.assertFalse(result.isPresent());
+
     }
 
     @Test
@@ -52,7 +53,7 @@ public class ProductRepositoryTests {
     }
 
     @Test
-    public void finByIdShouldReturnProductObjectWhenIdExist() {
+    public void findByIdShouldReturnProductObjectWhenIdExist() {
         Optional<Product> result = productRepository.findById(existingId);
 
         Assertions.assertTrue(result.isPresent());

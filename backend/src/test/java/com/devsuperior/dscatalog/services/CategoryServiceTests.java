@@ -1,4 +1,4 @@
-package services;
+package com.devsuperior.dscatalog.services;
 
 import com.devsuperior.dscatalog.dto.CategoryDTO;
 import com.devsuperior.dscatalog.dto.CategoryRecord;

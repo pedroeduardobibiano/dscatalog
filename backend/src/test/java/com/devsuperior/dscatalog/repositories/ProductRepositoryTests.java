@@ -10,7 +10,7 @@ import tests.Factory;
 
 import java.util.Optional;
 
-@DataJpaTest
+@DataJpaTest(showSql = false)
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class ProductRepositoryTests {
 

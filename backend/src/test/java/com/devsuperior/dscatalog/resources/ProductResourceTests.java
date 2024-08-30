@@ -49,6 +49,8 @@ public class ProductResourceTests {
 
     @BeforeEach
     public void setUp() {
+
+
         existId = 1L;
         noExistId = 100L;
         productDTO.setId(existId);
@@ -178,13 +180,10 @@ public class ProductResourceTests {
 
     @Test
     public void insertShouldInsertObject() throws Exception {
-        productDTO = new ProductDTO();
-        productDTO.setId(5L);
-        productDTO.setName("Pedro");
 
         String jsonBody = objectMapper.writeValueAsString(productDTO);
 
-        Mockito.when(service.insert(productDTO)).thenReturn(productDTO);
+        Mockito.when(service.insert(any())).thenReturn(productDTO);
 
         ResultActions result =
                 mockMvc.perform(post("/products")
@@ -194,8 +193,10 @@ public class ProductResourceTests {
         result.andDo(print());
         result.andExpect(status().isCreated());
         result.andExpect(jsonPath("$.id").exists());
-        ;
-
+        result.andExpect(jsonPath("$.name").exists());
+        result.andExpect(jsonPath("$.description").exists());
+        result.andExpect(jsonPath("$.price").exists());
+        result.andExpect(jsonPath("$.date").exists());
 
     }
 

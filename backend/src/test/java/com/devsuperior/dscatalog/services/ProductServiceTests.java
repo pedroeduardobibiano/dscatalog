@@ -1,4 +1,4 @@
-package services;
+package com.devsuperior.dscatalog.services;
 
 import com.devsuperior.dscatalog.entites.Product;
 import com.devsuperior.dscatalog.repositories.ProductRepository;

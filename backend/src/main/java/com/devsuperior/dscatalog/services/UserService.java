@@ -20,19 +20,19 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    private final UserRepository UserRepository;
+    private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     public UserService(com.devsuperior.dscatalog.repositories.UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder) {
-        UserRepository = userRepository;
+        this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
     public Page<UserDTO> findAllPaged(Pageable pageable) {
-        Page<User> list = UserRepository.findAll(pageable);
+        Page<User> list = userRepository.findAll(pageable);
         return list.map(UserDTO::new);
     }
 
@@ -47,7 +47,7 @@ public class UserService {
         User entity = new User();
         updateData(entity, userDTO);
         entity.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        UserRepository.save(entity);
+        userRepository.save(entity);
         return new UserDTO(entity);
     }
 
@@ -56,26 +56,26 @@ public class UserService {
     public UserDTO update(Long id, UserDTO UserDTO) {
         User entity = getById(id);
         updateData(entity, UserDTO);
-        entity = UserRepository.save(entity);
+        entity = userRepository.save(entity);
         return new UserDTO(entity);
     }
 
     @Transactional
     public void delete(Long id) {
         User entity = getById(id);
-        UserRepository.delete(entity);
+        userRepository.delete(entity);
     }
 
 
     private User getById(Long id) {
-        Optional<User> user = UserRepository.findById(id);
+        Optional<User> user = userRepository.findById(id);
         return user.orElseThrow(() -> new ResourceNotFoundException("id not found: " + id));
     }
 
     private void updateData(User user, UserDTO obj) {
         BeanUtils.copyProperties(obj, user, "id");
 
-        obj.getRoles().clear();
+        user.getRoles().clear();
         for (RoleDTO roleDTO : obj.getRoles()) {
             Role role = roleRepository.getReferenceById(roleDTO.getId());
             user.getRoles().add(role);

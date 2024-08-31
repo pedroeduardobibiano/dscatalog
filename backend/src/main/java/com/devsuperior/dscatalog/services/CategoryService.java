@@ -50,20 +50,22 @@ public class CategoryService {
         return new CategoryRecord(cat.getId(), cat.getName());
     }
 
-    public void testIfExistCategoryNameEqual(CategoryDTO categoryDTO) {
-        categoryRepository.findByName(categoryDTO.getName())
-                .ifPresent(x -> {
-                    throw new EntityExistsException("Category already exists");
-                });
-    }
 
     @Transactional
     public CategoryRecord update(CategoryDTO categoryDTO) {
+        testIfExistCategoryNameEqual(categoryDTO);
         Category category = getById(categoryDTO.getId());
         category.setName(categoryDTO.getName());
 
         category = categoryRepository.save(category);
         return new CategoryRecord(category.getId(), category.getName());
+    }
+
+    public void testIfExistCategoryNameEqual(CategoryDTO categoryDTO) {
+        categoryRepository.findByName(categoryDTO.getName())
+                .ifPresent(x -> {
+                    throw new EntityExistsException("Category already exists");
+                });
     }
 
 

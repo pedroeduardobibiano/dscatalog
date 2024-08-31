@@ -25,6 +25,8 @@ public class ProductDTO {
     private Double price;
 
     private String imgUrl;
+
+    @PastOrPresent(message = "A data do produto não pode ser futura")
     private Instant date;
 
     private final List<CategoryDTO> categories = new ArrayList<>();

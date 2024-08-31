@@ -69,6 +69,7 @@ public class ProductService {
         BeanUtils.copyProperties(obj, product, "id");
         product.getCategories().clear();
 
+
         List<Category> categories = categoryService.getAllCategories(obj.getCategories());
         product.getCategories().addAll(categories);
     }

@@ -67,6 +67,7 @@ public class ProductService {
 
     private void updateData(Product product, ProductDTO obj) {
         BeanUtils.copyProperties(obj, product, "id");
+
         product.getCategories().clear();
 
 

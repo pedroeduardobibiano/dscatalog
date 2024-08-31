@@ -2,6 +2,7 @@ package com.devsuperior.dscatalog.dto;
 
 import com.devsuperior.dscatalog.entites.Category;
 import com.devsuperior.dscatalog.entites.Product;
+import jakarta.validation.constraints.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -11,9 +12,18 @@ import java.util.Set;
 public class ProductDTO {
 
     private Long id;
+
+    @Size(min = 3, max = 80, message = "Nome precisa ter de 3 a 80 caracteres")
+    @NotBlank(message = "Campo requerido")
     private String name;
+
+    @Size(min = 10, message = "Descrição precisa ter de 3 a 80 caracteres")
+    @NotBlank(message = "Campo requerido")
     private String description;
+
+    @Positive(message = "O preço deve ser positivo")
     private Double price;
+
     private String imgUrl;
     private Instant date;
 

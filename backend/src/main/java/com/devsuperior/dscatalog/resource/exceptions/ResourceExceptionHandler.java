@@ -1,6 +1,5 @@
 package com.devsuperior.dscatalog.resource.exceptions;
 
-import com.devsuperior.dscatalog.dto.exception.ValidationError;
 import com.devsuperior.dscatalog.services.exceptions.DatabaseException;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityExistsException;
@@ -42,20 +41,20 @@ public class ResourceExceptionHandler {
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<StandardError> methodArgumentNotValidation(MethodArgumentNotValidException e, HttpServletRequest request) {
+    public ResponseEntity<ValidationError> methodArgumentNotValidation(MethodArgumentNotValidException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
         ValidationError err = new ValidationError();
+        err.setTimestamp(Instant.now());
+        err.setStatus(status.value());
+        err.setError("Bad request, Integrity violation");
+        err.setMessage("Dados Invalidos");
+        err.setPath(request.getRequestURI());
 
         for (FieldError f : e.getBindingResult().getFieldErrors()) {
             assert f != null;
             err.addError(f.getField(), f.getDefaultMessage());
         }
 
-        err.setTimestamp(Instant.now());
-        err.setStatus(status.value());
-        err.setError("Bad request, Integrity violation");
-        err.setMessage("Dados Invalidos");
-        err.setPath(request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 

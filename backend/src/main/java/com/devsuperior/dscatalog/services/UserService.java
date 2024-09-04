@@ -5,27 +5,36 @@ import com.devsuperior.dscatalog.dto.UserDTO;
 import com.devsuperior.dscatalog.dto.UserInsertDTO;
 import com.devsuperior.dscatalog.entites.Role;
 import com.devsuperior.dscatalog.entites.User;
+import com.devsuperior.dscatalog.projections.UserDetailsProjection;
 import com.devsuperior.dscatalog.repositories.RoleRepository;
 import com.devsuperior.dscatalog.repositories.UserRepository;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.EntityExistsException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(com.devsuperior.dscatalog.repositories.UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -55,10 +64,18 @@ public class UserService {
 
     @Transactional
     public UserDTO update(Long id, UserDTO UserDTO) {
+        validateIfExistsByEmail(UserDTO);
         User entity = getById(id);
         updateData(entity, UserDTO);
         entity = userRepository.save(entity);
         return new UserDTO(entity);
+    }
+
+    public void validateIfExistsByEmail(UserDTO user) {
+        User byEmail = userRepository.findByEmail(user.getEmail());
+        if (byEmail != null) {
+            throw new EntityExistsException("User with email " + user.getEmail() + " already exists");
+        }
     }
 
     @Transactional
@@ -85,6 +102,24 @@ public class UserService {
 
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        List<UserDetailsProjection> result = userRepository.searchUserAndRolesByEmail(username);
+        if (result.isEmpty()) {
+            logger.error("User not found{}", username);
+            throw new UsernameNotFoundException("username not found: " + username);
+        }
+        User user = new User();
+        user.setEmail(username);
+        user.setPassword(result.get(0).getPassword());
+
+        for (UserDetailsProjection projection : result) {
+            user.addRoles(new Role(projection.getRoleId(), projection.getAuthority()));
+        }
+
+        logger.info("User found{}", username);
+        return user;
+    }
 }
 
 

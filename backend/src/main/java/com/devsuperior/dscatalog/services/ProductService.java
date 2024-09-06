@@ -1,6 +1,7 @@
 package com.devsuperior.dscatalog.services;
 
 import com.devsuperior.dscatalog.dto.ProductDTO;
+import com.devsuperior.dscatalog.dto.ProductMinDTO;
 import com.devsuperior.dscatalog.entites.Category;
 import com.devsuperior.dscatalog.entites.Product;
 import com.devsuperior.dscatalog.repositories.ProductRepository;
@@ -26,9 +27,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findAllPaged(Pageable pageable) {
+    public Page<ProductMinDTO> findAllPaged(Pageable pageable) {
         Page<Product> list = productRepository.findAll(pageable);
-        return list.map(ProductDTO::new);
+        return list.map(ProductMinDTO::new);
     }
 
     @Transactional(readOnly = true)

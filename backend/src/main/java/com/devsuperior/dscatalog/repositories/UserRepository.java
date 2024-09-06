@@ -13,7 +13,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query(value = "SELECT * FROM tb_user WHERE email = :email", nativeQuery = true)
     User findByEmail(String email);
 
     @Query(value = """
@@ -24,6 +23,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
                 WHERE tb_user.email = :email
             """, nativeQuery = true)
     List<UserDetailsProjection> searchUserAndRolesByEmail(String email);
+
+
+    @Query(value = "SELECT * FROM tb_user WHERE email = :email", nativeQuery = true)
+    Optional<User> findByEmail2(String email);
 
 
 }

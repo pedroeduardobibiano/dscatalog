@@ -94,7 +94,6 @@ public class User implements UserDetails, Serializable {
     public void addRoles(Role role) {
         roles.add(role);
     }
-
     public boolean hasRole(String roleName) {
         for (Role role : roles) {
             if (role.getAuthority().equals(roleName)) {

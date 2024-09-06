@@ -1,5 +1,6 @@
-package com.devsuperior.demo.config.customgrant;
+package com.devsuperior.dscatalog.config.customgrant;
 
+import java.io.Serial;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -12,6 +13,7 @@ import org.springframework.security.oauth2.server.authorization.authentication.O
 
 public class CustomPasswordAuthenticationToken extends OAuth2AuthorizationGrantAuthenticationToken {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     private final String username;
@@ -23,6 +25,7 @@ public class CustomPasswordAuthenticationToken extends OAuth2AuthorizationGrantA
 
         super(new AuthorizationGrantType("password"), clientPrincipal, additionalParameters);
 
+        assert additionalParameters != null;
         this.username = (String) additionalParameters.get("username");
         this.password = (String) additionalParameters.get("password");
         this.scopes = Collections.unmodifiableSet(

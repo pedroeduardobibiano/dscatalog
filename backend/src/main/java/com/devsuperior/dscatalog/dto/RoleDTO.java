@@ -25,6 +25,7 @@ public class RoleDTO implements Serializable {
         this.authority = role.getAuthority();
     }
 
+
     public Long getId() {
         return id;
     }

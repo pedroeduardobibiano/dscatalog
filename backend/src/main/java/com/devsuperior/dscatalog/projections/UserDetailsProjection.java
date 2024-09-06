@@ -2,7 +2,7 @@ package com.devsuperior.dscatalog.projections;
 
 public interface UserDetailsProjection {
 
-    String email();
+    String getUsername();
 
     String getPassword();
 

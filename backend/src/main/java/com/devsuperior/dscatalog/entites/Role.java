@@ -1,16 +1,14 @@
 package com.devsuperior.dscatalog.entites;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "tb_role")
-public class Role implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class Role implements GrantedAuthority {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,6 +31,7 @@ public class Role implements Serializable {
         this.id = id;
     }
 
+    @Override
     public String getAuthority() {
         return authority;
     }
@@ -40,6 +39,9 @@ public class Role implements Serializable {
     public void setAuthority(String authority) {
         this.authority = authority;
     }
+
+
+
 
     @Override
     public boolean equals(Object o) {

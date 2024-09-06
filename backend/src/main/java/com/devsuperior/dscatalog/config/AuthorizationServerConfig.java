@@ -3,6 +3,7 @@ package com.devsuperior.dscatalog.config;
 import com.devsuperior.dscatalog.config.customgrant.CustomPasswordAuthenticationConverter;
 import com.devsuperior.dscatalog.config.customgrant.CustomPasswordAuthenticationProvider;
 import com.devsuperior.dscatalog.config.customgrant.CustomUserAuthorities;
+import com.devsuperior.dscatalog.entites.User;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
@@ -49,6 +50,7 @@ import java.util.UUID;
 
 @Configuration
 public class AuthorizationServerConfig {
+
 
     @Value("${security.client-id}")
     private String clientId;

@@ -22,6 +22,7 @@ public class UserInsertValidator implements ConstraintValidator<UserInsertValid,
     public void initialize(UserInsertValid constraintAnnotation) {
     }
 
+
     @Override
     public boolean isValid(UserInsertDTO dto, ConstraintValidatorContext context) {
         List<FieldMessage> list = new ArrayList<>();

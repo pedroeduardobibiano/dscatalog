@@ -2,7 +2,6 @@ package com.devsuperior.dscatalog.services;
 
 import com.devsuperior.dscatalog.entites.Product;
 import com.devsuperior.dscatalog.repositories.ProductRepository;
-import com.devsuperior.dscatalog.services.ProductService;
 import com.devsuperior.dscatalog.services.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +55,7 @@ public class ProductServiceTests {
             productService.delete(noExistId);
         });
 
-    Mockito.verify(productRepository, Mockito.times(1)).findById(noExistId);
+        Mockito.verify(productRepository, Mockito.times(1)).findById(noExistId);
 
     }
 

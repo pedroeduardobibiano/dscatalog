@@ -1,7 +1,6 @@
 package com.devsuperior.dscatalog.resource;
 
 import com.devsuperior.dscatalog.dto.ProductDTO;
-import com.devsuperior.dscatalog.dto.ProductMinDTO;
 import com.devsuperior.dscatalog.entites.Product;
 import com.devsuperior.dscatalog.services.ProductService;
 import jakarta.validation.Valid;
@@ -25,11 +24,13 @@ public class ProductResource {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProductMinDTO>> findAll(
+    public ResponseEntity<Page<ProductDTO>> findAll(
+            @RequestParam(value = "categoryId", required = false) Long categoryId,
+            @RequestParam(value = "name", defaultValue = "") String name,
             @PageableDefault(page = 0, size = 3, sort = "name", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
-        Page<ProductMinDTO> list = productService.findAllPaged(pageable);
+        Page<ProductDTO> list = productService.findAllPaged(categoryId, name.trim(), pageable);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
@@ -57,7 +58,7 @@ public class ProductResource {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<ProductDTO> update(@PathVariable Long id,@Valid  @RequestBody ProductDTO dto) {
+    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @Valid @RequestBody ProductDTO dto) {
         ProductDTO productDto = productService.update(id, dto);
         return new ResponseEntity<>(productDto, HttpStatus.OK);
     }

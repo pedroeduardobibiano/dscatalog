@@ -41,7 +41,7 @@
 //    private Long noExistId;
 //
 //
-//    private ProductDTO productDTO = new ProductDTO();
+//    private final ProductDTO productDTO = new ProductDTO();
 //
 //
 //    @Autowired
@@ -57,7 +57,7 @@
 //        productDTO.setName("tv 4k");
 //        productDTO.setDescription("tv plana 43 polegadas, preta");
 //        productDTO.setPrice(1800.00);
-//        productDTO.setDate(Instant.parse("2024-08-27T16:56:00Z"));
+//        productDTO.setDate(Instant.parse("2023-08-27T16:56:00Z"));
 //
 //
 //        PageImpl<ProductDTO> page = new PageImpl<>(List.of(productDTO));

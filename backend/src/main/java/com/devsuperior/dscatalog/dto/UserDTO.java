@@ -16,7 +16,7 @@ public class UserDTO implements Serializable {
 
     private Long id;
 
-    @Size(min = 3, max = 60, message = "nome precisa ter entre 5 e 60 caracteres")
+    @Size(min = 3, max = 60, message = "nome precisa ter entre 3 e 60 caracteres")
     @NotBlank(message = "Campo requerido")
     private String firstName;
 
@@ -24,7 +24,7 @@ public class UserDTO implements Serializable {
     @NotBlank(message = "Campo requerido")
     private String lastName;
 
-    @Email(message = "Favor entra com email valido")
+    @Email(message = "Favor entrar com email valido")
     private String email;
 
     Set<RoleDTO> roles = new HashSet<>();
